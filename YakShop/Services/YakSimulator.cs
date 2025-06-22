@@ -1,0 +1,86 @@
+﻿using YakShop.Api.Entities;
+
+namespace YakShop.Api.Services;
+
+public class YakSimulator
+{
+    // Represents the internal state of a yak during simulation.
+    private class InternalYakState
+    {
+        public string Name { get; set; } = default!;
+        public double AgeInDays { get; set; }
+        public double LastShavedAgeInYears { get; set; }
+        public int LastShavedSimDay { get; set; } = 0;
+    }
+
+    //A yak after simulation. Used in /herd/{day} endpoint to return the simulated herd.
+    public class SimulatedYak
+    {
+        public string Name { get; set; } = default!;
+        public double AgeInYears { get; set; }
+        public double AgeLastShaved { get; set; }
+    }
+
+    //The result of the simulation, containing total milk produced, total skins collected, and the state of the herd.
+    public class SimulationResult
+    {
+        public double TotalMilk { get; set; }
+        public int TotalSkins { get; set; }
+        public List<SimulatedYak> Herd { get; set; } = new();
+    }
+
+    public SimulationResult Simulate(List<LabYak> yaks, int targetDay)
+    {
+        double milk = 0;
+        int skins = 0;
+
+        //Yaks are simulated as InternalYakState to track their state during the simulation.
+        var internalHerd = yaks
+            .Select(y => new InternalYakState
+            {
+                Name = y.Name,
+                AgeInDays = y.AgeInDays,
+                LastShavedSimDay = 0,
+                LastShavedAgeInYears = y.AgeLastShavedInDays / 100
+            }).ToList();
+
+        for (int day = 0; day < targetDay; day++)
+        {
+            foreach (var yak in internalHerd)
+            {
+                if (yak.AgeInDays >= 1000) continue;
+
+                //Milking
+                double todaysMilk = 50 - yak.AgeInDays * 0.03;
+                if (todaysMilk > 0)
+                    milk += todaysMilk;
+
+                //Shaving
+                double minDaysBetweenShaves = 8 + yak.AgeInDays * 0.01;
+                if (yak.AgeInDays >= 100 && (day - yak.LastShavedSimDay) >= minDaysBetweenShaves)
+                {
+                    skins++;
+                    yak.LastShavedSimDay = day;
+                    yak.LastShavedAgeInYears = yak.AgeInDays / 100;
+                }
+
+                yak.AgeInDays++;
+            }
+        }
+
+        // Prepare the result with total milk, total skins, and the state of the herd.
+        var result = new SimulationResult
+        {
+            TotalMilk = Math.Round(milk, 2),
+            TotalSkins = skins,
+            Herd = internalHerd.Select(y => new SimulatedYak
+            {
+                Name = y.Name,
+                AgeInYears = Math.Round(y.AgeInDays / 100, 2),
+                AgeLastShaved = Math.Round(y.LastShavedAgeInYears, 2)
+            }).ToList()
+        };
+
+        return result;
+    }
+}

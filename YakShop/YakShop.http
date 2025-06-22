@@ -1,0 +1,6 @@
+@YakShop_HostAddress = http://localhost:5237
+
+GET {{YakShop_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

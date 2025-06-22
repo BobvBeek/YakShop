@@ -1,0 +1,24 @@
+{
+    "herd": [{
+        "name": "Ben",
+        "age": 4,
+        "sex": "MALE"
+      }, {
+        "name": "Maria",
+        "age": 8,
+        "sex": "FEMALE"
+      }, {
+        "name": "Olivia",
+        "age": 9.5,
+        "sex": "FEMALE"
+      }, {
+        "name": "Wouter",
+        "age": 4.5,
+        "sex": "MALE"
+      }, {
+        "name": "Lisa",
+        "age": 6,
+        "sex": "FEMALE"
+      }
+    ]
+   }
