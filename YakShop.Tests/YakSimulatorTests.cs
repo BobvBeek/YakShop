@@ -15,8 +15,8 @@ namespace YakShop.Tests
         [Fact]
         public void Simulate_WithSingleYak_ReturnsCorrectMilkAndSkins()
         {      
-            var yak = new LabYak { Name = "Yak1", AgeInYears = 4, Sex = "FEMALE" };
-            var herd = new List<LabYak> { yak };
+            var yak = new Yak { Name = "Yak1", AgeInYears = 4, Sex = "FEMALE" };
+            var herd = new List<Yak> { yak };
             var simulator = new YakSimulator();
 
             var result = simulator.Simulate(herd, 13); // simulate for 13 days
@@ -33,9 +33,9 @@ namespace YakShop.Tests
         [Fact]
         public void Simulate_DeadYak_ProducesNoMilkOrSkins()
         {
-            var yak = new LabYak { Name = "DeadYak", AgeInYears = 10.0, Sex = "FEMALE" };
+            var yak = new Yak { Name = "DeadYak", AgeInYears = 10.0, Sex = "FEMALE" };
             var simulator = new YakSimulator();
-            var herd = new List<LabYak> { yak };
+            var herd = new List<Yak> { yak };
 
             var result = simulator.Simulate(herd, 10);
 
@@ -51,9 +51,9 @@ namespace YakShop.Tests
         [InlineData(100)]
         public void Simulate_WithVariousDays_ProducesConsistentAging(int days)
         {
-            var yak = new LabYak { Name = "AgingYak", AgeInYears = 5, Sex = "FEMALE" };
+            var yak = new Yak { Name = "AgingYak", AgeInYears = 5, Sex = "FEMALE" };
             var simulator = new YakSimulator();
-            var herd = new List<LabYak> { yak };
+            var herd = new List<Yak> { yak };
 
             var result = simulator.Simulate(herd, days);
 

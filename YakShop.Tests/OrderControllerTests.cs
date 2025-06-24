@@ -11,6 +11,9 @@ using YakShop.Api.DB;
 using YakShop.Controllers;
 using System.Threading.Tasks;
 using Xunit;
+using YakShop.Models;
+using YakShop.Repositories;
+using YakShop.Services;
 
 
 
@@ -44,7 +47,12 @@ namespace YakShop.Tests
         {
             // Create database context with initial stock
             var context = CreateContextWithStock(milk: 2000, skins: 5);
-            var controller = new OrderController(context);
+            var orderRepository = new OrderRepository(context);
+            var stockRepository = new StockRepository(context);
+            var orderChecker = new OrderChecker(stockRepository);
+
+            // Create controller with repositories and service
+            var controller = new OrderController(orderRepository, stockRepository);
 
             var order = new PlaceOrderRequest
             {
@@ -52,7 +60,7 @@ namespace YakShop.Tests
                 Order = new OrderContent { Milk = 1000, Skins = 2 }
             };
 
-            var result = await controller.PlaceOrder(order);
+            var result = await controller.PlaceOrder(order, orderChecker);
 
             // Test for: Result responses, milk and skins quantities
             var created = Assert.IsType<CreatedResult>(result);
@@ -65,16 +73,22 @@ namespace YakShop.Tests
         [Fact]
         public async Task PlaceOrder_ReturnsPartialContent_WhenOnlySkinsAvailable()
         {
-            var context = CreateContextWithStock(milk: 100, skins: 5);
-            var controller = new OrderController(context);
+            // Create database context with initial stock
+            var context = CreateContextWithStock(milk: 2000, skins: 5);
+            var orderRepository = new OrderRepository(context);
+            var stockRepository = new StockRepository(context);
+            var orderChecker = new OrderChecker(stockRepository);
+
+            // Create controller with repositories and service
+            var controller = new OrderController(orderRepository, stockRepository);
 
             var order = new PlaceOrderRequest
             {
                 Customer = "Bob",
-                Order = new OrderContent { Milk = 500, Skins = 3 }
+                Order = new OrderContent { Milk = 50000, Skins = 3 }
             };
 
-            var result = await controller.PlaceOrder(order);
+            var result = await controller.PlaceOrder(order, orderChecker);
 
             // Test for: Result responses, skins quantity, and milk being null
             var partial = Assert.IsType<ObjectResult>(result);
@@ -88,8 +102,14 @@ namespace YakShop.Tests
         [Fact]
         public async Task PlaceOrder_ReturnsNotFound_WhenNothingIsAvailable()
         {
-            var context = CreateContextWithStock(milk: 0, skins: 0);
-            var controller = new OrderController(context);
+            // Create database context with initial stock
+            var context = CreateContextWithStock(milk: 5, skins: 0);
+            var orderRepository = new OrderRepository(context);
+            var stockRepository = new StockRepository(context);
+            var orderChecker = new OrderChecker(stockRepository);
+
+            // Create controller with repositories and service
+            var controller = new OrderController(orderRepository, stockRepository);
 
             var order = new PlaceOrderRequest
             {
@@ -97,7 +117,7 @@ namespace YakShop.Tests
                 Order = new OrderContent { Milk = 10, Skins = 1 }
             };
 
-            var result = await controller.PlaceOrder(order);
+            var result = await controller.PlaceOrder(order, orderChecker);
 
             // Test for: Result responses
             Assert.IsType<NotFoundResult>(result);
