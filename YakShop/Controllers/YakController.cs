@@ -27,7 +27,7 @@ namespace YakShop.Controllers
             _context.LabYaks.RemoveRange(_context.LabYaks);
             await _context.SaveChangesAsync();
 
-            var newYaks = request.Herd.Select(dto => new LabYak
+            var newYaks = request.Herd.Select(dto => new Yak
             {
                 Name = dto.Name,
                 AgeInYears = dto.Age,
@@ -39,24 +39,6 @@ namespace YakShop.Controllers
             await _context.SaveChangesAsync();
 
             return StatusCode(205);
-        }
-
-        // Returns the herd of yaks for a specific day, simulating their age and production using the YakSimulator service.
-        [HttpGet("{day}")]
-        public async Task<IActionResult> GetHerd(int day, [FromServices] YakSimulator simulator)
-        {
-            var yaks = await _context.LabYaks.ToListAsync();
-            var result = simulator.Simulate(yaks, day);
-
-            return Ok(new
-            {
-                herd = result.Herd.Select(y => new
-                {
-                    name = y.Name,
-                    age = y.AgeInYears,
-                    ageLastShaved = y.AgeLastShaved
-                })
-            });
         }
 
         // Returns the original herd of yaks without any simulation.

@@ -1,12 +1,13 @@
 ﻿using YakShop.Api.Entities;
 using YakShop.Models;
+using YakShop.Models.YakModels;
 
 namespace YakShop.Api.Services;
 
 public class YakSimulator
 {
     // Function for calculating the simulationr results of a given herd and day   
-    public SimulationResult Simulate(List<LabYak> yaks, int targetDay)
+    public SimulationResult Simulate(List<Yak> yaks, int targetDay)
     {
         double milk = 0;
         int skins = 0;
