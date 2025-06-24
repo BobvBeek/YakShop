@@ -1,6 +1,4 @@
-﻿using YakShop.Models.YakModels;
-
-namespace YakShop.Models
+﻿namespace YakShop.Models
 {
     public class SimulationResult
     {

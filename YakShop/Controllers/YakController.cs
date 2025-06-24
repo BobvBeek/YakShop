@@ -4,6 +4,8 @@ using YakShop.Api.DB;
 using YakShop.Api.Entities;
 using YakShop.Api.Models;
 using YakShop.Api.Services;
+using YakShop.Repositories.Interfaces;
+using YakShop.Repositories.Repositories;
 
 namespace YakShop.Controllers
 {
@@ -11,21 +13,24 @@ namespace YakShop.Controllers
     [Route("herd")]
     public class YakController : ControllerBase
     {
-        private readonly YakDbContext _context;
+        private readonly IOrderRepository _orderRepo;
+        private readonly IStockRepository _stockRepo;
+        private readonly IYakRepository _yakRepo;
 
-        public YakController(YakDbContext context)
+        public YakController(IOrderRepository orderRepo, IStockRepository stockRepo, IYakRepository yakRepo)
         {
-            _context = context;
+            _orderRepo = orderRepo;
+            _stockRepo = stockRepo;
+            _yakRepo = yakRepo;
         }
 
         // Loads a new herd of yaks from the provided request. Resets the current state by removing all existing orders, stock, and yaks.
         [HttpPost]
         public async Task<IActionResult> LoadHerd([FromBody] LoadHerdRequest request)
         {
-            _context.Orders.RemoveRange(_context.Orders);
-            _context.Stock.RemoveRange(_context.Stock);
-            _context.LabYaks.RemoveRange(_context.LabYaks);
-            await _context.SaveChangesAsync();
+            await _orderRepo.RemoveAllOrders();
+            await _stockRepo.RemoveAllStock();
+            await _yakRepo.RemoveAllYaks();
 
             var newYaks = request.Herd.Select(dto => new Yak
             {
@@ -35,8 +40,7 @@ namespace YakShop.Controllers
                 AgeLastShavedInDays = dto.Age * 100
             }).ToList();
 
-            _context.LabYaks.AddRange(newYaks);
-            await _context.SaveChangesAsync();
+            await _yakRepo.AddMultipleYaksAsync(newYaks);
 
             return StatusCode(205);
         }
@@ -45,7 +49,7 @@ namespace YakShop.Controllers
         [HttpGet]
         public async Task<IActionResult> GetOriginalHerd()
         {
-            var herd = await _context.LabYaks.ToListAsync();
+            var herd = await _yakRepo.GetAllYaksAsync();
             return Ok(new { herd });
         }
     }

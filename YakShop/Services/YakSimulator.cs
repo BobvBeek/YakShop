@@ -1,6 +1,5 @@
 ﻿using YakShop.Api.Entities;
 using YakShop.Models;
-using YakShop.Models.YakModels;
 
 namespace YakShop.Api.Services;
 
