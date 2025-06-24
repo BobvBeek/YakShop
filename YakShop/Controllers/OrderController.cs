@@ -35,12 +35,6 @@ namespace YakShop.Controllers
             //Check the validity of the request and create an order
             var order = await orderChecker.CheckOrder(request, stock);
 
-            //If both items are out stock, return NotFound
-            if (order.MilkDelivered == 0 && order.MilkDelivered == 0)
-            {
-                return NotFound();
-            }
-
             //add the order to the repository
             await _orderRepo.AddOrderAsync(order);
 
