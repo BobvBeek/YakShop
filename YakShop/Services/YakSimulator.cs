@@ -1,34 +1,11 @@
 ﻿using YakShop.Api.Entities;
+using YakShop.Models;
 
 namespace YakShop.Api.Services;
 
 public class YakSimulator
 {
-    // Represents the internal state of a yak during simulation.
-    private class InternalYakState
-    {
-        public string Name { get; set; } = default!;
-        public double AgeInDays { get; set; }
-        public double LastShavedAgeInYears { get; set; }
-        public int LastShavedSimDay { get; set; } = 0;
-    }
-
-    //A yak after simulation. Used in /herd/{day} endpoint to return the simulated herd.
-    public class SimulatedYak
-    {
-        public string Name { get; set; } = default!;
-        public double AgeInYears { get; set; }
-        public double AgeLastShaved { get; set; }
-    }
-
-    //The result of the simulation, containing total milk produced, total skins collected, and the state of the herd.
-    public class SimulationResult
-    {
-        public double TotalMilk { get; set; }
-        public int TotalSkins { get; set; }
-        public List<SimulatedYak> Herd { get; set; } = new();
-    }
-
+    // Function for calculating the simulationr results of a given herd and day   
     public SimulationResult Simulate(List<LabYak> yaks, int targetDay)
     {
         double milk = 0;

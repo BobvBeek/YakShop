@@ -66,7 +66,9 @@ namespace YakShop.Controllers
                 return Ok(result);
             }
 
-            if ((DateTime.Now - stock.LastUpdate).TotalMinutes > 5)
+            var stockUpdateTimer = 5; // Number of minites after which a new day stock is generated
+
+            if ((DateTime.Now - stock.LastUpdate).TotalMinutes > stockUpdateTimer)
             {
                 var result = await SimulateStock(GenerateRandomDay(), simulator);
 
