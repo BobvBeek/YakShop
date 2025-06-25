@@ -1,14 +1,12 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using YakShop.Api.DB;
-using YakShop.Api.Entities;
-using YakShop.Api.Models;
-using YakShop.Api.Services;
-using YakShop.Repositories.Interfaces;
-using YakShop.Repositories.Repositories;
+using YakShop.DB;
+using YakShop.Entities;
+using YakShop.Models;
 using YakShop.Services;
-
+using YakShop.Mappers;
+using YakShop.Repositories.Interfaces;
 
 namespace YakShop.Controllers
 {
@@ -39,7 +37,7 @@ namespace YakShop.Controllers
                 LastUpdate = DateTime.Now
             };
 
-            return Ok(stock);
+            return Ok(StockMapper.ToDto(stock));
         }
 
         // Endpoint to get the current stock, simulating if necessary if no stock exists or if the last update was more than 5 minutes ago
@@ -58,12 +56,12 @@ namespace YakShop.Controllers
                 await _stockRepo.RemoveAllStock(); // Clear existing stock before adding new one
                 await _stockRepo.AddStockAsync(result);
 
-                return Ok(result);
+                return Ok(StockMapper.ToDto(result));
             }
 
             await _stockRepo.UpdateStockAsync(stock);
 
-            return Ok(stock);
+            return Ok(StockMapper.ToDto(stock));
         }
     }
 }

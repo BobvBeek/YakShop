@@ -1,7 +1,7 @@
-﻿using YakShop.Api.Entities;
+﻿using YakShop.Entities;
 using YakShop.Models;
 
-namespace YakShop.Api.Services;
+namespace YakShop.Services;
 
 public class YakSimulator
 {

@@ -1,4 +1,4 @@
-﻿namespace YakShop.Api.Entities;
+﻿namespace YakShop.Entities;
 
 public class Yak
 {

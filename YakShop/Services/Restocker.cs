@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using YakShop.Api.Entities;
-using YakShop.Api.Services;
+using YakShop.Entities;
+using YakShop.Services;
 
 namespace YakShop.Services
 {

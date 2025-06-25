@@ -1,6 +1,6 @@
 ﻿using YakShop.Models;
 
-namespace YakShop.Api.Models
+namespace YakShop.Models
 {
     public class PlaceOrderRequest
     {

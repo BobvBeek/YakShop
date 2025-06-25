@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using YakShop.Api.Entities;
+using YakShop.Entities;
 
-namespace YakShop.Api.DB;
+namespace YakShop.DB;
 
 public class YakDbContext : DbContext
 {

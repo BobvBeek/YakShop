@@ -1,6 +1,6 @@
-﻿using YakShop.Api.Entities;
+﻿using YakShop.Entities;
 
-namespace YakShop.Repositories.Repositories
+namespace YakShop.Repositories.Interfaces
 {
     public interface IOrderRepository
     {

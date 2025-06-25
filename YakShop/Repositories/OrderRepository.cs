@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using YakShop.Api.DB;
-using YakShop.Api.Entities;
-using YakShop.Repositories.Repositories;
-
+using YakShop.DB;
+using YakShop.Entities;
+using YakShop.Repositories.Interfaces;
 
 namespace YakShop.Repositories
 {

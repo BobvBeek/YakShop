@@ -1,4 +1,4 @@
-﻿using YakShop.Api.Entities;
+﻿using YakShop.Entities;
 
 namespace YakShop.Repositories.Interfaces
 {

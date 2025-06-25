@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using YakShop.Api.DB;
-using YakShop.Api.Entities;
-using YakShop.Api.Models;
-using YakShop.Api.Services;
-using YakShop.Repositories.Interfaces;
-using YakShop.Repositories.Repositories;
+using YakShop.DB;
+using YakShop.Entities;
+using YakShop.Models;
 using YakShop.Services;
+using YakShop.Repositories.Interfaces;
+using YakShop.Mappers;
+using YakShop.DTOs;
 
 namespace YakShop.Controllers
 {
@@ -27,7 +27,7 @@ namespace YakShop.Controllers
         //If the requested amount is available, it delivers the full amount; otherwise, it delivers what is available.
         //Updates Stock accordingly.
         [HttpPost]
-        public async Task<IActionResult> PlaceOrder([FromBody] PlaceOrderRequest request, [FromServices] OrderChecker orderChecker)
+        public async Task<IActionResult> PlaceOrder([FromBody] OrderDto request, [FromServices] OrderChecker orderChecker)
         {
             //Get the current stock
             var stock = await _stockRepo.GetStockAsync();

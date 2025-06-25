@@ -1,10 +1,11 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
-using YakShop.Api.Entities;
-using YakShop.Api.Models;
+using YakShop.Entities;
 using YakShop.Models;
 using YakShop.Repositories.Interfaces;
-using YakShop.Repositories.Repositories;
+using YakShop.Repositories;
+using YakShop.Mappers;
+using YakShop.DTOs;
 
 namespace YakShop.Services
 {
@@ -17,11 +18,11 @@ namespace YakShop.Services
             _stockRepo = stockRepo;
         }
 
-        public async Task<Order> CheckOrder(PlaceOrderRequest orderRequest, Stock stock)
+        public async Task<Order> CheckOrder(OrderDto orderRequest, Stock stock)
         {
             //Get order details from the request
-            var requestedMilk = orderRequest.Order.Milk ?? 0;
-            var requestedSkins = orderRequest.Order.Skins ?? 0;
+            var requestedMilk = orderRequest.MilkOrdered ?? 0;
+            var requestedSkins = orderRequest.SkinsOrdered ?? 0;
 
             var deliverMilk = requestedMilk <= stock.Milk ? requestedMilk : 0;
             var deliverSkins = requestedSkins <= stock.Skins ? requestedSkins : 0;
@@ -44,19 +45,13 @@ namespace YakShop.Services
 
         public async Task<IActionResult> CheckStatus(Order order)
         {
-            var content = new OrderContent
-            {
-                Milk = order.MilkDelivered,
-                Skins = order.SkinsDelivered
-            };
-
             return order switch
             {
                 { MilkDelivered: > 0, SkinsDelivered: > 0 }
-                    => new CreatedResult(string.Empty, content),
+                    => new CreatedResult(string.Empty, OrderMapper.ToDto(order)),
 
                 { MilkDelivered: > 0 } or { SkinsDelivered: > 0 }
-                    => new ObjectResult(content) { StatusCode = StatusCodes.Status206PartialContent },
+                    => new ObjectResult(OrderMapper.ToDto(order)) { StatusCode = StatusCodes.Status206PartialContent },
 
                 _ => new NotFoundResult()
             };
