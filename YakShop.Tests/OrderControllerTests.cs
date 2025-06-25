@@ -5,15 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using YakShop.Api.Entities;
-using YakShop.Api.Models;
-using YakShop.Api.DB;
+using YakShop.Entities;
+using YakShop.Models;
+using YakShop.DB;
 using YakShop.Controllers;
 using System.Threading.Tasks;
 using Xunit;
-using YakShop.Models;
 using YakShop.Repositories;
 using YakShop.Services;
+using YakShop.DTOs;
 
 
 
@@ -54,19 +54,20 @@ namespace YakShop.Tests
             // Create controller with repositories and service
             var controller = new OrderController(orderRepository, stockRepository);
 
-            var order = new PlaceOrderRequest
+            var order = new OrderDto
             {
                 Customer = "Alice",
-                Order = new OrderContent { Milk = 1000, Skins = 2 }
+                MilkOrdered = 1000,
+                SkinsOrdered = 2
             };
 
             var result = await controller.PlaceOrder(order, orderChecker);
 
             // Test for: Result responses, milk and skins quantities
             var created = Assert.IsType<CreatedResult>(result);
-            var response = Assert.IsType<OrderContent>(created.Value);
-            Assert.Equal(1000, response.Milk);
-            Assert.Equal(2, response.Skins);
+            var response = Assert.IsType<OrderDto>(created.Value);
+            Assert.Equal(1000, response.MilkOrdered);
+            Assert.Equal(2, response.SkinsOrdered);
         }
 
         // Test for placing an order with partly insufficient stock
@@ -82,10 +83,11 @@ namespace YakShop.Tests
             // Create controller with repositories and service
             var controller = new OrderController(orderRepository, stockRepository);
 
-            var order = new PlaceOrderRequest
+            var order = new OrderDto
             {
-                Customer = "Bob",
-                Order = new OrderContent { Milk = 50000, Skins = 3 }
+                Customer = "`Bob",
+                MilkOrdered = 2500,
+                SkinsOrdered = 3
             };
 
             var result = await controller.PlaceOrder(order, orderChecker);
@@ -93,9 +95,9 @@ namespace YakShop.Tests
             // Test for: Result responses, skins quantity, and milk being null
             var partial = Assert.IsType<ObjectResult>(result);
             Assert.Equal(206, partial.StatusCode);
-            var response = Assert.IsType<OrderContent>(partial.Value);
-            Assert.Null(response.Milk);
-            Assert.Equal(3, response.Skins);
+            var response = Assert.IsType<OrderDto>(partial.Value);
+            Assert.Null(response.MilkOrdered);
+            Assert.Equal(3, response.SkinsOrdered);
         }
 
         // Test for placing an order when no stock is available
@@ -111,10 +113,11 @@ namespace YakShop.Tests
             // Create controller with repositories and service
             var controller = new OrderController(orderRepository, stockRepository);
 
-            var order = new PlaceOrderRequest
+            var order = new OrderDto
             {
                 Customer = "Bob",
-                Order = new OrderContent { Milk = 10, Skins = 1 }
+                MilkOrdered = 10,
+                SkinsOrdered = 2
             };
 
             var result = await controller.PlaceOrder(order, orderChecker);

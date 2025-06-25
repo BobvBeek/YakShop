@@ -4,8 +4,8 @@ using Xunit;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using YakShop.Api.Entities;
-using YakShop.Api.Services;
+using YakShop.Services;
+using YakShop.Entities;
 
 namespace YakShop.Tests
 {
