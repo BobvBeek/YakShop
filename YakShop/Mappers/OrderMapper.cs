@@ -18,5 +18,12 @@ namespace YakShop.Mappers
             MilkOrdered = dto.MilkOrdered,
             SkinsOrdered = dto.SkinsOrdered
         };
+
+        public static OrderDto ToDeliveredDto(Order order) => new OrderDto
+        {
+            Customer = order.Customer,
+            MilkOrdered = order.MilkDelivered,
+            SkinsOrdered = order.SkinsDelivered
+        };
     }
 }

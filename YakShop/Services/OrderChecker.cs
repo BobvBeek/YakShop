@@ -51,7 +51,7 @@ namespace YakShop.Services
                     => new CreatedResult(string.Empty, OrderMapper.ToDto(order)),
 
                 { MilkDelivered: > 0 } or { SkinsDelivered: > 0 }
-                    => new ObjectResult(OrderMapper.ToDto(order)) { StatusCode = StatusCodes.Status206PartialContent },
+                    => new ObjectResult(OrderMapper.ToDeliveredDto(order)) { StatusCode = StatusCodes.Status206PartialContent },
 
                 _ => new NotFoundResult()
             };
