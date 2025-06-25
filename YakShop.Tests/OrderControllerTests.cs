@@ -85,7 +85,7 @@ namespace YakShop.Tests
 
             var order = new OrderDto
             {
-                Customer = "`Bob",
+                Customer = "Bob",
                 MilkOrdered = 2500,
                 SkinsOrdered = 3
             };
